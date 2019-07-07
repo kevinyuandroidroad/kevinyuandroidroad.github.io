@@ -1144,7 +1144,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/06/2PC协议理解/" itemprop="url">2PC协议理解</a></h1>
+                <a class="post-title-link" href="/2019/07/06/2PC协议理解/" itemprop="url">2PC与3PC协议总结</a></h1>
         
 
         <div class="post-meta">
@@ -1179,8 +1179,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/zoomkeeper理解/" itemprop="url" rel="index">
-                    <span itemprop="name">zoomkeeper理解</span>
+                  <a href="/categories/zoomkeeper总结/" itemprop="url" rel="index">
+                    <span itemprop="name">zoomkeeper总结</span>
                   </a>
                 </span>
 
@@ -1218,9 +1218,8 @@
       
         
           
-          二阶段提交(Two-phaseCommit)是指，在计算机网络以及数据库领域内，为了使基于分布式系统架构下的所有节点在进行事务提交时保持一致性而设计的一种算法。
-
-          
+          2PC与3PC分布式系统中，每一个机器节点虽然都能够明确的知道自己在进行实物操作过程中的结果是成功还是失败，但却无法直接获取到其他分布式节点的操作结果。因此，当一个事务操作需要跨越多个分布式节点时，为了保持事务的ACID特性，就需要引入一个“协调者”来统一调度所有分布式节点的执行。这些被调度的分布式
+          ...
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/07/06/2PC协议理解/#more" rel="contents">
@@ -1766,7 +1765,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -1777,7 +1776,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

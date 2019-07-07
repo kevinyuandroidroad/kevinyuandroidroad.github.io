@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="zoomkeeper理解,">
+  <meta name="keywords" content="zoomkeeper总结,">
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="二阶段提交(Two-phaseCommit)是指，在计算机网络以及数据库领域内，为了使基于分布式系统架构下的所有节点在进行事务提交时保持一致性而设计的一种算法。">
-<meta name="keywords" content="zoomkeeper理解">
+<meta name="description" content="2PC与3PC分布式系统中，每一个机器节点虽然都能够明确的知道自己在进行实物操作过程中的结果是成功还是失败，但却无法直接获取到其他分布式节点的操作结果。因此，当一个事务操作需要跨越多个分布式节点时，为了保持事务的ACID特性，就需要引入一个“协调者”来统一调度所有分布式节点的执行。这些被调度的分布式节点叫“参与者”。协调者负责调度参与者的行为，并最终决定这些参与者是否要把事务真正的进行提交。 2P">
+<meta name="keywords" content="zoomkeeper总结">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2PC协议理解">
+<meta property="og:title" content="2PC与3PC协议总结">
 <meta property="og:url" content="http://yoursite.com/2019/07/06/2PC协议理解/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="二阶段提交(Two-phaseCommit)是指，在计算机网络以及数据库领域内，为了使基于分布式系统架构下的所有节点在进行事务提交时保持一致性而设计的一种算法。">
+<meta property="og:description" content="2PC与3PC分布式系统中，每一个机器节点虽然都能够明确的知道自己在进行实物操作过程中的结果是成功还是失败，但却无法直接获取到其他分布式节点的操作结果。因此，当一个事务操作需要跨越多个分布式节点时，为了保持事务的ACID特性，就需要引入一个“协调者”来统一调度所有分布式节点的执行。这些被调度的分布式节点叫“参与者”。协调者负责调度参与者的行为，并最终决定这些参与者是否要把事务真正的进行提交。 2P">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-06T15:09:35.296Z">
+<meta property="og:updated_time" content="2019-07-07T03:17:17.435Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2PC协议理解">
-<meta name="twitter:description" content="二阶段提交(Two-phaseCommit)是指，在计算机网络以及数据库领域内，为了使基于分布式系统架构下的所有节点在进行事务提交时保持一致性而设计的一种算法。">
+<meta name="twitter:title" content="2PC与3PC协议总结">
+<meta name="twitter:description" content="2PC与3PC分布式系统中，每一个机器节点虽然都能够明确的知道自己在进行实物操作过程中的结果是成功还是失败，但却无法直接获取到其他分布式节点的操作结果。因此，当一个事务操作需要跨越多个分布式节点时，为了保持事务的ACID特性，就需要引入一个“协调者”来统一调度所有分布式节点的执行。这些被调度的分布式节点叫“参与者”。协调者负责调度参与者的行为，并最终决定这些参与者是否要把事务真正的进行提交。 2P">
 
 
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>2PC协议理解 | Hexo</title>
+  <title>2PC与3PC协议总结 | Hexo</title>
   
 
 
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">2PC协议理解</h1>
+          <h1 class="post-title" itemprop="name headline">2PC与3PC协议总结</h1>
         
 
         <div class="post-meta">
@@ -315,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/zoomkeeper理解/" itemprop="url" rel="index">
-                    <span itemprop="name">zoomkeeper理解</span>
+                  <a href="/categories/zoomkeeper总结/" itemprop="url" rel="index">
+                    <span itemprop="name">zoomkeeper总结</span>
                   </a>
                 </span>
 
@@ -352,7 +352,67 @@
       
 
       
-        <p>二阶段提交(Two-phaseCommit)是指，在计算机网络以及数据库领域内，为了使基于分布式系统架构下的所有节点在进行事务提交时保持一致性而设计的一种算法。</p>
+        <h4 id="2PC与3PC"><a href="#2PC与3PC" class="headerlink" title="2PC与3PC"></a>2PC与3PC</h4><p>分布式系统中，每一个机器节点虽然都能够明确的知道自己在进行实物操作过程中的结果是成功还是失败，但却无法直接获取到其他分布式节点的操作结果。因此，当一个事务操作需要跨越多个分布式节点时，为了保持事务的ACID特性，就需要引入一个“协调者”来统一调度所有分布式节点的执行。这些被调度的分布式节点叫“参与者”。协调者负责调度参与者的行为，并最终决定这些参与者是否要把事务真正的进行提交。</p>
+<h5 id="2PC"><a href="#2PC" class="headerlink" title="2PC"></a>2PC</h5><p>2PC，即二阶段提交(Two-phaseCommit)是指，在计算机网络尤其是在数据库领域内，为了使基于分布式系统架构下的所有节点在进行事务提交时保持原子性和一致性而设计的一种算法。二阶段提交也被称为是一种一致性协议(Protocol))。绝大多数关系型数据库都是采用二阶段提交协议来完成分布式事务的。二阶段提交的算法思路可以概括为：参与者将操作成败通知协调者，再由协调者根据所有参与者的反馈情报决定各参与者是否要提交操作还是中止操作。二阶段提交是强一致性算法。</p>
+<ul>
+<li>第一阶段：准备阶段(投票阶段)</li>
+<li>第二阶段：提交阶段（执行阶段）</li>
+</ul>
+<h6 id="准备阶段：提交事务请求"><a href="#准备阶段：提交事务请求" class="headerlink" title="准备阶段：提交事务请求"></a>准备阶段：提交事务请求</h6><ol>
+<li><p>协调者进行事务询问：</p>
+<p>协调者向所有参与者发送事务内容，询问是否可以执行事务提交操作，并开始等待每一个参与者的响应。</p>
+</li>
+<li><p>参与者执行事务：</p>
+<p>各参与者执行事务操作，并将Undo和Redo信息计入事务日志中。</p>
+</li>
+<li><p>各参与者向协调者反馈事务询问的响应：</p>
+<p>如果参与者成功执行了事务操作，就反馈给协调者yes；如果参与者没有成功执行事务，就反馈no。</p>
+</li>
+</ol>
+<h6 id="提交阶段：执行事务提交"><a href="#提交阶段：执行事务提交" class="headerlink" title="提交阶段：执行事务提交"></a>提交阶段：执行事务提交</h6><p>如果所有协调者接收到所有参与者发送的响应都是yes，执行事务提交：</p>
+<ol>
+<li>协调者向所有参与者发送提交请求</li>
+<li>参与者收到提交请求后，正式提交事务，并在完成提交之后释放整个事务执行期间占用的事务资源，然后向协调者反馈提交结果。</li>
+<li>协调者收到所有参与者反馈的提交结果后，完成事务。</li>
+</ol>
+<p>如果任何一个参与者向协调者反馈了no，或者等待超时之后，协调者无法收到所有参与者的反馈，执行事务中断：</p>
+<ol>
+<li>向所有参与者节点发出回滚请求。</li>
+<li>参与者接收到协调者发送的回滚请求，利用Undo信息执行回滚操作，完成回滚操作后，释放占用的资源，并向协调者反馈事务回滚结果。</li>
+<li>协调者收到所有参与者的反馈结果，完成事务中断。</li>
+</ol>
+<h6 id="2PC的缺点"><a href="#2PC的缺点" class="headerlink" title="2PC的缺点"></a>2PC的缺点</h6><ul>
+<li>同步阻塞   如果协调者有任何一个参与者的反馈信息没有收到，就会等待，其他参与者无法进行其他任何操作。</li>
+<li>单点问题   协调者非常重要，一旦出现问题，整个二阶段提交流程将无法运转。参与者可能一直处于事务锁定状态，无法继续完成事务操作。</li>
+<li>二阶段提交的提交阶段，如果协调者只给部分参与者发送了提交请求就崩溃了，导致一部分参与者提交了事务，一部分参与者没有提交。出现分布式系统中数据不一致的现象。</li>
+</ul>
+<h5 id="3PC"><a href="#3PC" class="headerlink" title="3PC"></a>3PC</h5><p>3PC,即三阶段提交，是2PC的改进版。将二阶段提交协议的第二阶段（提交事务）过程一分为二，形成了由canCommit,preCommit和doCommit三个阶段组成的事务处理协议。</p>
+<h6 id="阶段一：CanCommit"><a href="#阶段一：CanCommit" class="headerlink" title="阶段一：CanCommit"></a>阶段一：CanCommit</h6><ol>
+<li>事务询问。协调者向所有参与者发送canCommit请求，询问是否可以执行事务提交。</li>
+<li>参与者接收到询问后，如果认为可以顺利执行事务，反馈yes，否则反馈no（该过程并不执行事务，而是进入执行事务的预备状态）</li>
+</ol>
+<h6 id="阶段二：PreCommit"><a href="#阶段二：PreCommit" class="headerlink" title="阶段二：PreCommit"></a>阶段二：PreCommit</h6><p>在此阶段，协调者根据各参与者反馈情况决定是否可以进行事务的PreCommit，分两种可能：</p>
+<ul>
+<li><p>执行事务预提交</p>
+<ol>
+<li>协调者收到所有参与者yes反馈后，向所有参与者发出preCommit请求</li>
+<li>参与者接收到preCommit请求后，执行事务操作，并记录Undo和Redo信息到事务日志中</li>
+<li>参与者向协调者反馈事务执行ACK。</li>
+</ol>
+</li>
+<li><p>中断事务</p>
+<ol>
+<li>协调者有收到参与者反馈的no响应，或者等待超时，没有收到参与者的响应时，发送中断请求</li>
+<li>参与者中断事务。</li>
+</ol>
+</li>
+</ul>
+<h6 id="阶段三：doCommit"><a href="#阶段三：doCommit" class="headerlink" title="阶段三：doCommit"></a>阶段三：doCommit</h6><p>该阶段进行真正的事务提交，有两种情况：</p>
+<ul>
+<li>协调者收到preCommit阶段所有参与者反馈的执行事务成功的结果，发松提交请求，参与者收到请求，正式执行commit操作，完成后释放事务资源并反馈给协调者，协调者收到反馈，完成事务。</li>
+<li>协调者收到preCommit阶段的参与者反馈执行事务的结果中，有执行失败的反馈，发送中断请求，参与者接到请求后，执行事务回滚，并在回滚完成后释放事务资源，反馈回滚结果给协调者，协调者收到中断反馈后，完成事务中断。</li>
+</ul>
+<h6 id="3PC缺点"><a href="#3PC缺点" class="headerlink" title="3PC缺点"></a>3PC缺点</h6><p>仍然会导致数据不一致现象。协调者在发送doCommit请求时突然崩溃，导致一部分参与者执行了事务，一部分没有执行。</p>
 
       
     </div>
@@ -370,7 +430,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/zoomkeeper理解/" rel="tag"># zoomkeeper理解</a>
+            <a href="/tags/zoomkeeper总结/" rel="tag"># zoomkeeper总结</a>
           
         </div>
       
@@ -447,8 +507,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -474,7 +543,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -485,7 +554,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -508,6 +577,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#2PC与3PC"><span class="nav-number">1.</span> <span class="nav-text">2PC与3PC</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2PC"><span class="nav-number">1.1.</span> <span class="nav-text">2PC</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#准备阶段：提交事务请求"><span class="nav-number">1.1.1.</span> <span class="nav-text">准备阶段：提交事务请求</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#提交阶段：执行事务提交"><span class="nav-number">1.1.2.</span> <span class="nav-text">提交阶段：执行事务提交</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2PC的缺点"><span class="nav-number">1.1.3.</span> <span class="nav-text">2PC的缺点</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3PC"><span class="nav-number">1.2.</span> <span class="nav-text">3PC</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#阶段一：CanCommit"><span class="nav-number">1.2.1.</span> <span class="nav-text">阶段一：CanCommit</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#阶段二：PreCommit"><span class="nav-number">1.2.2.</span> <span class="nav-text">阶段二：PreCommit</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#阶段三：doCommit"><span class="nav-number">1.2.3.</span> <span class="nav-text">阶段三：doCommit</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3PC缺点"><span class="nav-number">1.2.4.</span> <span class="nav-text">3PC缺点</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
