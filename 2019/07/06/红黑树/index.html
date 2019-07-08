@@ -88,7 +88,8 @@
 <meta property="og:description" content="一颗高度为h的二叉搜索树查找的时间复杂度为O(h)，随着树的高度h原来越大，时间复杂度并不比链表快，因此引入红黑树。 红黑树的性质 每个节点非红即黑 根节点是黑色的 每个叶点（NIL）是黑色的 如果一个节点是红色的，则他的两个子节点都是黑色的 对每一个节点，从该节点到其所有后代叶节点的路径上，包含的黑色节点数量相同  红黑树是满足红黑性质的二叉搜索树。 下图是一颗红黑树：  从某个节点出发（不包含">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-08%20%E4%B8%8B%E5%8D%889.43.58.png">
-<meta property="og:updated_time" content="2019-07-08T14:18:28.873Z">
+<meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-08%20%E4%B8%8B%E5%8D%8811.40.34.png">
+<meta property="og:updated_time" content="2019-07-08T15:44:54.599Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="红黑树总结">
 <meta name="twitter:description" content="一颗高度为h的二叉搜索树查找的时间复杂度为O(h)，随着树的高度h原来越大，时间复杂度并不比链表快，因此引入红黑树。 红黑树的性质 每个节点非红即黑 根节点是黑色的 每个叶点（NIL）是黑色的 如果一个节点是红色的，则他的两个子节点都是黑色的 对每一个节点，从该节点到其所有后代叶节点的路径上，包含的黑色节点数量相同  红黑树是满足红黑性质的二叉搜索树。 下图是一颗红黑树：  从某个节点出发（不包含">
@@ -368,11 +369,16 @@
 <p>从某个节点出发（不包含该节点）到达一个也节点的任意一条简单路径上的黑色节点个数称为该节点的<strong>黑高</strong></p>
 <p>一颗红黑树的黑高为其根节点的黑高。</p>
 <p>证明：一颗有n个内部节点的红黑树的高度至多为2lg(n+1)。</p>
-<p>证：先证以任意一个节点x为根的子树至少包含的内部节点为</p>
+<p>第一步：先证以任意一个节点x$为根的子树至少包含的内部节点为$$2^{bh(x)}-1$ 个。之中bh(x)为黑高。 如果x的高度为0，则x必为叶节点（T.nil),并且以x为根节点的子树至少包含</p>
 <script type="math/tex; mode=display">
-2^{bh(x)}-1</script><p>个。之中bh(x)为黑高。 如果x的高度为0，则x必为叶节点（T.nil),并且以x为根节点的子树至少包含</p>
+2^{bh(x)}-1=2^0-1=0</script><p> 个内部节点。考虑一个高度为正值且有两个子节点的内部节点x，每个节点有黑高bh(x)或bh(x)-1，这分别取决于自身的颜色是红还是黑。由于x的子节点的高度比x本身的高度要低，可以得出每个子节点至少有$2^{bh(x)-1}-1$个内部节点。所以，以x为根的子树至少包含</p>
 <script type="math/tex; mode=display">
-2^{bh(x)}-1=2^0-1=0</script><p> 个内部节点。</p>
+（2^{bh(x)-1}-1）+(2^{bh(x)-1})+1=2^{bh(x)}-1</script><p>个内部节点。</p>
+<p>第二步：设树的高度为h。根据红黑树的性质四，从根到叶子节点（不包括根节点）的任何一条简单路径上都至少有一半的节点为黑色。因此，树高至少为h/2；于是有</p>
+<script type="math/tex; mode=display">
+n>=2^{h/2}-1</script><p>把1移到不等式的左边，再对两边取对数，得到$lg(n+1)&gt;=h/2$</p>
+<p>所以$h&lt;=2lg(n+1)$ 。 也因此，查询一棵高度为h红黑树的时间复杂度为O(lgn)。</p>
+<h5 id="红黑树旋转"><a href="#红黑树旋转" class="headerlink" title="红黑树旋转"></a>红黑树旋转</h5><p><img src="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-08%20%E4%B8%8B%E5%8D%8811.40.34.png" alt="红黑树"></p>
 
       
     </div>
@@ -547,7 +553,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#红黑树的性质"><span class="nav-number">1.</span> <span class="nav-text">红黑树的性质</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#红黑树的性质"><span class="nav-number">1.</span> <span class="nav-text">红黑树的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#红黑树旋转"><span class="nav-number">1.1.</span> <span class="nav-text">红黑树旋转</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -754,6 +760,28 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
 
   
 
