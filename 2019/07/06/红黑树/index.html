@@ -90,7 +90,7 @@
 <meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-08%20%E4%B8%8B%E5%8D%889.43.58.png">
 <meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-08%20%E4%B8%8B%E5%8D%8811.40.34.png">
 <meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-09%20%E4%B8%8B%E5%8D%887.04.47.png">
-<meta property="og:updated_time" content="2019-07-09T11:06:44.284Z">
+<meta property="og:updated_time" content="2019-07-09T14:47:35.674Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="红黑树总结">
 <meta name="twitter:description" content="一颗高度为h的二叉搜索树查找的时间复杂度为O(h)，随着树的高度h原来越大，时间复杂度并不比链表快，因此引入红黑树。 红黑树的性质 每个节点非红即黑 根节点是黑色的 每个叶点（NIL）是黑色的 如果一个节点是红色的，则他的两个子节点都是黑色的 对每一个节点，从该节点到其所有后代叶节点的路径上，包含的黑色节点数量相同  红黑树是满足红黑性质的二叉搜索树。 下图是一颗红黑树：  从某个节点出发（不包含">
@@ -388,7 +388,19 @@ n>=2^{h/2}-1</script><p>把1移到不等式的左边，再对两边取对数，�
 <li>判断该节点着为红色后，红黑树的性质能否得到保持。</li>
 <li>如过破坏了红黑树性质第四条（如果一个节点是红色的，则他的两个子节点都是黑色的），则循环将有关节点进行重新着色和旋转。</li>
 </ol>
+<p>下图是一个插入红黑树的例子：</p>
 <p><img src="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-09%20%E4%B8%8B%E5%8D%887.04.47.png" alt="红黑树插入"></p>
+<ol>
+<li><p>新节点z被插入a树中。</p>
+<p>z首先被着为红色，这么做为了保持性质5（对每一个节点，从该节点到其所有后代叶节点的路径上，包含的黑色节点数量相同），因此，当z插入后，仍然始终满足红黑树的性质1，性质3，和性质5。而性质2是否满足取决于新插入的节点是否为该树的根节点。如果是，则将该节点再次着为黑色。上图a中显然z节点不是根节点，那么，对于5条性质，它破坏了性质4。</p>
+</li>
+<li><p>由于z为红色，z的父节点x也为红色。违反了性质4，同时z的叔父节点y也是红色的。所以，重新将x，y着为黑色。如图b，因为x，y着为黑色，所以x，y的父节点z必须着为红色，如果不这么做，z的父节点x到达它的每一个子树的叶子节点的黑高分别为2，3，3，因此，会违反性质5。</p>
+</li>
+<li><p>图b仍然违反性质4，因为x的子节点z为红色。同时，x的兄弟节点y为黑色。顾对x，z进行左旋。得到图c。</p>
+</li>
+<li><p>图c的x，z节点违反性质4。进行一次又旋，并将新的根节点7着为黑色。</p>
+</li>
+</ol>
 
       
     </div>
