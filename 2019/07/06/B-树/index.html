@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="数据结构,">
+  <meta name="keywords" content="mysql之innodb索引,">
 
 
 
@@ -79,15 +79,28 @@
 
 
 
-<meta name="keywords" content="数据结构">
+<meta name="description" content="每棵含有n个节点的B树的高度为lgn，即跟红黑树一样，可以在O(lgn)内完成b树的操作。 B+树  B+树的插入操作     Leaf Page满 Index Page满 操作     no no 直接将记录插入到叶子节点   yes no 1.拆分leaf page。2.将中间节点放入index page中。3.小于中间节点的记录放在左边。  4.大于或等于中间节点的记录放右边。   yes">
+<meta name="keywords" content="mysql之innodb索引">
 <meta property="og:type" content="article">
 <meta property="og:title" content="B++树">
 <meta property="og:url" content="http://yoursite.com/2019/07/06/B-树/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="每棵含有n个节点的B树的高度为lgn，即跟红黑树一样，可以在O(lgn)内完成b树的操作。 B+树  B+树的插入操作     Leaf Page满 Index Page满 操作     no no 直接将记录插入到叶子节点   yes no 1.拆分leaf page。2.将中间节点放入index page中。3.小于中间节点的记录放在左边。  4.大于或等于中间节点的记录放右边。   yes">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-06T04:42:43.955Z">
+<meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-11%20%E4%B8%8B%E5%8D%887.40.46.png">
+<meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-12%20%E4%B8%8B%E5%8D%888.26.56.png">
+<meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-11%20%E4%B8%8B%E5%8D%887.41.31.png">
+<meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-12%20%E4%B8%8B%E5%8D%888.36.26.png">
+<meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-11%20%E4%B8%8B%E5%8D%887.42.29.png">
+<meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-12%20%E4%B8%8B%E5%8D%888.44.01.png">
+<meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-12%20%E4%B8%8B%E5%8D%888.44.22.png">
+<meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-12%20%E4%B8%8B%E5%8D%888.44.35.png">
+<meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-11%20%E4%B8%8B%E5%8D%887.59.55.png">
+<meta property="og:updated_time" content="2019-07-12T12:52:46.175Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="B++树">
+<meta name="twitter:description" content="每棵含有n个节点的B树的高度为lgn，即跟红黑树一样，可以在O(lgn)内完成b树的操作。 B+树  B+树的插入操作     Leaf Page满 Index Page满 操作     no no 直接将记录插入到叶子节点   yes no 1.拆分leaf page。2.将中间节点放入index page中。3.小于中间节点的记录放在左边。  4.大于或等于中间节点的记录放右边。   yes">
+<meta name="twitter:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-11%20%E4%B8%8B%E5%8D%887.40.46.png">
 
 
 
@@ -312,8 +325,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">数据结构</span>
+                  <a href="/categories/mysql之innodb索引/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql之innodb索引</span>
                   </a>
                 </span>
 
@@ -349,7 +362,58 @@
       
 
       
-        
+        <p>每棵含有n个节点的B树的高度为lgn，即跟红黑树一样，可以在O(lgn)内完成b树的操作。</p>
+<p>B+树</p>
+<p><img src="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-11%20%E4%B8%8B%E5%8D%887.40.46.png" alt="聚集索引"></p>
+<p>B+树的插入操作</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Leaf Page满</th>
+<th style="text-align:center">Index Page满</th>
+<th style="text-align:center">操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">no</td>
+<td style="text-align:center">no</td>
+<td style="text-align:center">直接将记录插入到叶子节点</td>
+</tr>
+<tr>
+<td style="text-align:center">yes</td>
+<td style="text-align:center">no</td>
+<td style="text-align:center">1.拆分leaf page。2.将中间节点放入index page中。3.小于中间节点的记录放在左边。  4.大于或等于中间节点的记录放右边。</td>
+</tr>
+<tr>
+<td style="text-align:center">yes</td>
+<td style="text-align:center">yes</td>
+<td style="text-align:center">1.拆分leaf page。2.小于中间节点的记录放左边。3.大于或等于中间节点的记录放在右边。4.拆分index page。5.小于中间节点的记录放在左边。 大于中间节点的记录放在右边。7.中间节点放入上一层index page。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>如图5-7，将键值28插入图5-6的b+树，直接插入leaf page。</p>
+<p><img src="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-12%20%E4%B8%8B%E5%8D%888.26.56.png" alt="聚集索引"></p>
+<p><img src="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-11%20%E4%B8%8B%E5%8D%887.41.31.png" alt="聚集索引"></p>
+<p><img src="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-12%20%E4%B8%8B%E5%8D%888.36.26.png" alt="聚集索引"></p>
+<p><img src="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-11%20%E4%B8%8B%E5%8D%887.42.29.png" alt="聚集索引"></p>
+<p>B+树删除操作</p>
+<p><img src="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-12%20%E4%B8%8B%E5%8D%888.44.01.png" alt="聚集索引"></p>
+<p><img src="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-12%20%E4%B8%8B%E5%8D%888.44.22.png" alt="聚集索引"></p>
+<p><img src="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-12%20%E4%B8%8B%E5%8D%888.44.35.png" alt="聚集索引"></p>
+<p>B+树索引</p>
+<p>mysql的InnoDb存储引擎的索引类型分为聚集索引和辅助索引。</p>
+<h5 id="聚集索引"><a href="#聚集索引" class="headerlink" title="聚集索引"></a>聚集索引</h5><p>每个表只能有一个聚集索引。因为聚集索引就是按照每张表的主键构造的一棵b+树，树的叶子节点存储的是整张表的行记录数据（数据页）。每个数据页通过双向链表尽心链接。</p>
+<p>查询优化器一般倾向于使用聚集索引，因为聚集索引的叶子节点直接可以找到完整的行数据。聚集索引特别擅长做排序的范围查询。因为数据页通过双向链表，可以快速找到范围内的数据页。聚集索引如下：</p>
+<p><img src="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-11%20%E4%B8%8B%E5%8D%887.59.55.png" alt="聚集索引"></p>
+<p>创建表的时候应该尽量创建一个自增主键，保证数据在innodb表中是按主键顺序插入。尽量避免使用类似uuid作为主键。因为uuid长并且随机的，基于uuid构建的聚集索引没有丝毫的聚集特性。如果主键是顺序的，innodb会把每一条记录都存储在上一条的后面，当当前数据页存满记录时，下一条记录会写入新的数据页，聚集索引的页可以几乎被记录填满，这是最好的结果；反之，如果是uuid这种毫无规律的主键，插入数据操作是乱序的，会导致innodb频繁的做页分裂操作，以便为新的行分配空间。数据碎片化严重，导致很多页存很少的数据，却有非常多的页，这样，查找数据的效率和插入的效率很低（插入时不断的页分裂，开销很大）。</p>
+
       
     </div>
     
@@ -366,7 +430,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+            <a href="/tags/mysql之innodb索引/" rel="tag"># mysql之innodb索引</a>
           
         </div>
       
@@ -443,8 +507,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -470,7 +543,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -481,7 +554,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -504,6 +577,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#聚集索引"><span class="nav-number">1.</span> <span class="nav-text">聚集索引</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
