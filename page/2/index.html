@@ -751,7 +751,7 @@ no
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/06/spring之bean生命周期/" itemprop="url">spring之bean生命周期</a></h1>
+                <a class="post-title-link" href="/2019/07/06/spring之bean生命周期/" itemprop="url">spring之bean的加载过程</a></h1>
         
 
         <div class="post-meta">
@@ -786,8 +786,8 @@ no
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring源码理解/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring源码理解</span>
+                  <a href="/categories/Spring源码研究/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring源码研究</span>
                   </a>
                 </span>
 
@@ -825,8 +825,12 @@ no
       
         
           
-          
-          
+          在研究bean的生命周期之前，必须了解spring容器是如何工作的，开始吧。
+容器的实现对于一个容器来说，最核心的功能是初始化并管理bean的生命周期，那么他是如何进行初始化工作的。
+
+读取applicationcontext.xml配置
+根据applicationcontext.xml的配置找到类
+          ...
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/07/06/spring之bean生命周期/#more" rel="contents">
@@ -1076,7 +1080,7 @@ no
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -1087,7 +1091,7 @@ no
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
