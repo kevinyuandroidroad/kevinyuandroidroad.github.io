@@ -79,13 +79,20 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/tags/Spring源码研究/index.html">
+<meta name="description" content="一旦把一个Bean纳入Spring IOC容器之中，这个Bean的生命周期就会交由容器进行管理，一般担当管理角色的是BeanFactory或者ApplicationContext。 下面以BeanFactory为例，整体说明一个Bean的生命周期活动  BeanFactory读取bean配置文件（包括@component，@service等注解），完成BeanFactory对bean的加载。 利用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring之bean的生命周期">
+<meta property="og:url" content="http://yoursite.com/2019/07/14/spring之bean的生命周期/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一旦把一个Bean纳入Spring IOC容器之中，这个Bean的生命周期就会交由容器进行管理，一般担当管理角色的是BeanFactory或者ApplicationContext。 下面以BeanFactory为例，整体说明一个Bean的生命周期活动  BeanFactory读取bean配置文件（包括@component，@service等注解），完成BeanFactory对bean的加载。 利用">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-14%20%E4%B8%8B%E5%8D%8810.14.41.png">
+<meta property="og:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-14%20%E4%B8%8B%E5%8D%8810.26.35.png">
+<meta property="og:updated_time" content="2019-07-14T14:28:06.426Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="spring之bean的生命周期">
+<meta name="twitter:description" content="一旦把一个Bean纳入Spring IOC容器之中，这个Bean的生命周期就会交由容器进行管理，一般担当管理角色的是BeanFactory或者ApplicationContext。 下面以BeanFactory为例，整体说明一个Bean的生命周期活动  BeanFactory读取bean配置文件（包括@component，@service等注解），完成BeanFactory对bean的加载。 利用">
+<meta name="twitter:image" content="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-14%20%E4%B8%8B%E5%8D%8810.14.41.png">
 
 
 
@@ -115,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/Spring源码研究/">
+  <link rel="canonical" href="http://yoursite.com/2019/07/14/spring之bean的生命周期/">
 
 
 
 
 
-  <title>标签: Spring源码研究 | Hexo</title>
+  <title>spring之bean的生命周期 | Hexo</title>
   
 
 
@@ -140,7 +147,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -244,52 +251,162 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Spring源码研究<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/14/spring之bean的生命周期/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="其顺">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/07/06/spring之bean生命周期/" itemprop="url">
-              
-                <span itemprop="name">spring之bean的加载过程</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">spring之bean的生命周期</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-07-06T12:37:02+08:00" content="2019-07-06">
-          07-06
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-14T10:07:51+08:00">
+                2019-07-14
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一旦把一个Bean纳入Spring IOC容器之中，这个Bean的生命周期就会交由容器进行管理，一般担当管理角色的是BeanFactory或者ApplicationContext。</p>
+<p>下面以BeanFactory为例，整体说明一个Bean的生命周期活动</p>
+<ol>
+<li>BeanFactory读取bean配置文件（包括@component，@service等注解），完成BeanFactory对bean的加载。</li>
+<li>利用User user = (User)beanFactory.getBean(“user”)或者（<em>@Autowired</em>）开始bean的实例化过程</li>
+<li>使用对象</li>
+<li>在容器关闭时，可以在Bean定义文件中使用“destory-method”定义的方法。</li>
+</ol>
+<p>第一条其实并不算是bean的生命周期部分，但它为bean的实例化做了准备工作。主要从第二条开始：</p>
+<p>详细步骤包括：</p>
+<ul>
+<li>Setter注入，执行Bean的属性依赖注入</li>
+<li>如果实现了BeanNameAware接口，则执行其setBeanName方法（实现了该接口，可自动获取beanName,但不会获取到它依赖的其他bean的beanName，因为这个接口在beanFactory实例化过程中是调用过ignoreDependencyInterface方法，忽略了实现BeanNameAware接口的bean的setter注入bean的自动装配）</li>
+<li>BeanFactoryAware的setBeanFactory()，如果实现了BeanFactoryAware接口，则执行其setBeanFactory方法。同BeanNameAware。如果实现了该接口，则该bean可自动获取到beaFactory实例。</li>
+<li>如果是</li>
+</ul>
+<p><img src="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-14%20%E4%B8%8B%E5%8D%8810.14.41.png" alt="bean的生命周期"></p>
+<p><img src="http://pubqvxiev.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-07-14%20%E4%B8%8B%E5%8D%8810.26.35.png" alt="bean的生命周期"></p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/08/mysql事务隔离级别/" rel="next" title="mysql事务隔离级别">
+                <i class="fa fa-chevron-left"></i> mysql事务隔离级别
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/18/jvm之内存分配策略/" rel="prev" title="jvm之内存分配策略">
+                jvm之内存分配策略 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -297,6 +414,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -518,6 +639,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="在研究bean的生命周期之前，必须了解spring容器是如何工作的，开始吧。 容器的实现对于一个容器来说，最核心的功能是初始化并管理bean的生命周期，那么他是如何进行初始化工作的。  读取applicationcontext.xml配置 根据applicationcontext.xml的配置找到类的配置并实力化bean 使用bean  spring提供了多种读取applicationcontex">
+<meta name="description" content="Spring是通过IoC容器对Bean进行管理的，而Bean的初始化主要分为两个过程：Bean的注册和Bean实例化。Bean的注册主要是指Spring通过读取配置文件获取各个bean的声明信息，并且对这些信息进行注册的过程。Bean的实例化则指的是Spring通过Bean的注册信息对各个Bean进行实例化的过程 BeanFactory首先对 对于一个容器来说，最核心的功能是初始化并管理bean">
 <meta name="keywords" content="Spring源码研究">
 <meta property="og:type" content="article">
 <meta property="og:title" content="spring之bean的加载过程">
 <meta property="og:url" content="http://yoursite.com/2019/07/06/spring之bean生命周期/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="在研究bean的生命周期之前，必须了解spring容器是如何工作的，开始吧。 容器的实现对于一个容器来说，最核心的功能是初始化并管理bean的生命周期，那么他是如何进行初始化工作的。  读取applicationcontext.xml配置 根据applicationcontext.xml的配置找到类的配置并实力化bean 使用bean  spring提供了多种读取applicationcontex">
+<meta property="og:description" content="Spring是通过IoC容器对Bean进行管理的，而Bean的初始化主要分为两个过程：Bean的注册和Bean实例化。Bean的注册主要是指Spring通过读取配置文件获取各个bean的声明信息，并且对这些信息进行注册的过程。Bean的实例化则指的是Spring通过Bean的注册信息对各个Bean进行实例化的过程 BeanFactory首先对 对于一个容器来说，最核心的功能是初始化并管理bean">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-14T02:03:28.924Z">
+<meta property="og:updated_time" content="2019-07-15T13:28:52.773Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="spring之bean的加载过程">
-<meta name="twitter:description" content="在研究bean的生命周期之前，必须了解spring容器是如何工作的，开始吧。 容器的实现对于一个容器来说，最核心的功能是初始化并管理bean的生命周期，那么他是如何进行初始化工作的。  读取applicationcontext.xml配置 根据applicationcontext.xml的配置找到类的配置并实力化bean 使用bean  spring提供了多种读取applicationcontex">
+<meta name="twitter:description" content="Spring是通过IoC容器对Bean进行管理的，而Bean的初始化主要分为两个过程：Bean的注册和Bean实例化。Bean的注册主要是指Spring通过读取配置文件获取各个bean的声明信息，并且对这些信息进行注册的过程。Bean的实例化则指的是Spring通过Bean的注册信息对各个Bean进行实例化的过程 BeanFactory首先对 对于一个容器来说，最核心的功能是初始化并管理bean">
 
 
 
@@ -352,8 +352,9 @@
       
 
       
-        <p>在研究bean的生命周期之前，必须了解spring容器是如何工作的，开始吧。</p>
-<h4 id="容器的实现"><a href="#容器的实现" class="headerlink" title="容器的实现"></a>容器的实现</h4><p>对于一个容器来说，最核心的功能是初始化并管理bean的生命周期，那么他是如何进行初始化工作的。</p>
+        <p> Spring是通过IoC容器对Bean进行管理的，而Bean的初始化主要分为两个过程：Bean的注册和Bean实例化。Bean的注册主要是指Spring通过读取配置文件获取各个bean的声明信息，并且对这些信息进行注册的过程。Bean的实例化则指的是Spring通过Bean的注册信息对各个Bean进行实例化的过程</p>
+<p>BeanFactory首先对</p>
+<p>对于一个容器来说，最核心的功能是初始化并管理bean的生命周期，那么他是如何进行初始化工作的。</p>
 <ol>
 <li>读取applicationcontext.xml配置</li>
 <li>根据applicationcontext.xml的配置找到类的配置并实力化bean</li>
@@ -492,17 +493,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -517,7 +509,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -562,22 +554,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#容器的实现"><span class="nav-number">1.</span> <span class="nav-text">容器的实现</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       

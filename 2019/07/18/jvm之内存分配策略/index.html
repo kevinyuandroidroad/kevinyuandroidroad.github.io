@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="mysql事务隔离级别事务的基本特征 Atomic（原子性）：事务中包括的操作被看做一个逻辑单元。这个逻辑单元中的操作要么所有成功。要么所有失败。 Consistency（一致性）：仅仅有合法的数据能够被写入数据库，否则事务应该将其回滚到最初状态。 Isolation（隔离性）：事务同意多个用户对同一个数据进行并发訪问，而不破坏数据的正确性和完整性。同一时候。并行事务的改动必须与其它并行事务的改动">
+<meta name="description" content="哪些内存需要回收？ 什么时候回收？ 如何回收？  为什么要去了解gc和内存分配？因为虽然javaGC和内存分配都是虚拟机自动进行的，但是，  当需要排查各种内存泄漏、内存溢出问题 当垃圾收集成为系统达到更高并发量的瓶颈  的时候，我们就需要对他们实施必要的监控和调节。 垃圾收集的主要对象程序计数器、虚拟机栈、本地方法栈这三个区域是线程私有的，栈中的栈帧随着方法的进入和退出执行着如栈何处栈的操作，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mysql事务隔离级别">
-<meta property="og:url" content="http://yoursite.com/2019/07/08/mysql事务隔离级别/index.html">
+<meta property="og:title" content="jvm之内存分配策略">
+<meta property="og:url" content="http://yoursite.com/2019/07/18/jvm之内存分配策略/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="mysql事务隔离级别事务的基本特征 Atomic（原子性）：事务中包括的操作被看做一个逻辑单元。这个逻辑单元中的操作要么所有成功。要么所有失败。 Consistency（一致性）：仅仅有合法的数据能够被写入数据库，否则事务应该将其回滚到最初状态。 Isolation（隔离性）：事务同意多个用户对同一个数据进行并发訪问，而不破坏数据的正确性和完整性。同一时候。并行事务的改动必须与其它并行事务的改动">
+<meta property="og:description" content="哪些内存需要回收？ 什么时候回收？ 如何回收？  为什么要去了解gc和内存分配？因为虽然javaGC和内存分配都是虚拟机自动进行的，但是，  当需要排查各种内存泄漏、内存溢出问题 当垃圾收集成为系统达到更高并发量的瓶颈  的时候，我们就需要对他们实施必要的监控和调节。 垃圾收集的主要对象程序计数器、虚拟机栈、本地方法栈这三个区域是线程私有的，栈中的栈帧随着方法的进入和退出执行着如栈何处栈的操作，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-08T13:00:17.101Z">
+<meta property="og:updated_time" content="2019-07-20T08:37:12.890Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mysql事务隔离级别">
-<meta name="twitter:description" content="mysql事务隔离级别事务的基本特征 Atomic（原子性）：事务中包括的操作被看做一个逻辑单元。这个逻辑单元中的操作要么所有成功。要么所有失败。 Consistency（一致性）：仅仅有合法的数据能够被写入数据库，否则事务应该将其回滚到最初状态。 Isolation（隔离性）：事务同意多个用户对同一个数据进行并发訪问，而不破坏数据的正确性和完整性。同一时候。并行事务的改动必须与其它并行事务的改动">
+<meta name="twitter:title" content="jvm之内存分配策略">
+<meta name="twitter:description" content="哪些内存需要回收？ 什么时候回收？ 如何回收？  为什么要去了解gc和内存分配？因为虽然javaGC和内存分配都是虚拟机自动进行的，但是，  当需要排查各种内存泄漏、内存溢出问题 当垃圾收集成为系统达到更高并发量的瓶颈  的时候，我们就需要对他们实施必要的监控和调节。 垃圾收集的主要对象程序计数器、虚拟机栈、本地方法栈这三个区域是线程私有的，栈中的栈帧随着方法的进入和退出执行着如栈何处栈的操作，">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/07/08/mysql事务隔离级别/">
+  <link rel="canonical" href="http://yoursite.com/2019/07/18/jvm之内存分配策略/">
 
 
 
 
 
-  <title>mysql事务隔离级别 | Hexo</title>
+  <title>jvm之内存分配策略 | Hexo</title>
   
 
 
@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/08/mysql事务隔离级别/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/18/jvm之内存分配策略/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="其顺">
@@ -279,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">mysql事务隔离级别</h1>
+          <h1 class="post-title" itemprop="name headline">jvm之内存分配策略</h1>
         
 
         <div class="post-meta">
@@ -291,8 +291,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-08T20:57:23+08:00">
-                2019-07-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-18T21:42:58+08:00">
+                2019-07-18
               </time>
             
 
@@ -329,41 +329,55 @@
       
 
       
-        <h4 id="mysql事务隔离级别"><a href="#mysql事务隔离级别" class="headerlink" title="mysql事务隔离级别"></a>mysql事务隔离级别</h4><h5 id="事务的基本特征"><a href="#事务的基本特征" class="headerlink" title="事务的基本特征"></a>事务的基本特征</h5><ul>
-<li>Atomic（原子性）：<br>事务中包括的操作被看做一个逻辑单元。这个逻辑单元中的操作要<br>么所有成功。要么所有失败。</li>
-<li>Consistency（一致性）：<br>仅仅有合法的数据能够被写入数据库，否则事务应该将其回滚到最初<br>状态。</li>
-<li>Isolation（隔离性）：<br>事务同意多个用户对同一个数据进行并发訪问，而不破坏数据的正<br>确性和完整性。同一时候。并行事务的改动必须与其它并行事务的改动<br>相互独立。 </li>
-<li>Durability（持久性）：<br>事务结束后。事务处理的结果必须可以得到固化。 </li>
-</ul>
-<h5 id="mysql隔离级别"><a href="#mysql隔离级别" class="headerlink" title="mysql隔离级别"></a>mysql隔离级别</h5><ol>
-<li><p>Read uncommitted（未提交读）</p>
-<p>设置这个级别，事务中的修改，及时没有提交，对其他事务也是可见的。一个事务可以读取另一个事务未提交的数据，导致脏读。（不建议使用，因为这个级别性能上并没有太大的提升，反而丢失了其他级别的好处）</p>
-</li>
-<li><p>Read committed（提交读）</p>
-<p>一个事务读取不到另一个事务未提交的修改。但是会导致在事务B提交前后，事务A读取两次的结果不一致。这同样不能解决脏读的问题。</p>
-</li>
-<li><p>Repeatable read(可重复读)</p>
-<p>mysql的默认隔离级别。事务A在多次读取同样记录的结果是一致的。解决了脏读问题。但是，如果事务B提交了该范围中新的数据时，事务A再次读取该范围，会发现多了新的数据。不过InnoDb通过多版本并非控制（MVCC)解决了幻读问题。</p>
-</li>
-<li><p>Serializable（串行化）</p>
-<p>这个级别，InnoDb会锁住访问范围内的每一行数据。并发性能低，易死锁。</p>
-</li>
+        <ol>
+<li>哪些内存需要回收？</li>
+<li>什么时候回收？</li>
+<li>如何回收？</li>
 </ol>
-<h5 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h5><ul>
-<li><p>事务1</p>
-<p>start transaction;</p>
-<p>update user set user_name=”job” where user_id = 1 and date=’2019-01-01’;</p>
-<p>update user set user_name=”tom” where user_id = 2 and date=’2019-01-02’;</p>
-<p>commit;</p>
-</li>
-<li><p>事务2</p>
-<p>start transaction;</p>
-<p>update user set user_age=20 where user_id = 2 and date=’2019-01-02’;</p>
-<p>update user set user_age=18 where user_id = 1 and date=’2019-01-01’;</p>
-<p>commit;</p>
-</li>
+<p>为什么要去了解gc和内存分配？因为虽然javaGC和内存分配都是虚拟机自动进行的，但是，</p>
+<ul>
+<li>当需要排查各种内存泄漏、内存溢出问题</li>
+<li>当垃圾收集成为系统达到更高并发量的瓶颈</li>
 </ul>
-<p>如果两个事务都执行了第一条语句，更新了一行数据，同时也锁定了该行数据。接着每个事物都去更新自己的第二条数据，却发现该行已经被对方相互锁定了。</p>
+<p>的时候，我们就需要对他们实施必要的监控和调节。</p>
+<h5 id="垃圾收集的主要对象"><a href="#垃圾收集的主要对象" class="headerlink" title="垃圾收集的主要对象"></a>垃圾收集的主要对象</h5><p>程序计数器、虚拟机栈、本地方法栈这三个区域是线程私有的，栈中的栈帧随着方法的进入和退出执行着如栈何处栈的操作，每一个栈帧分配多少内存基本上在类结构确定时就已知，因此这几个区域的内存分配和回收都具有确定性。而且随着方法结束或者线程结束，内存就跟着被回收了。</p>
+<p><strong>java堆和方法区（jdk1.8以后是元空间）确实内存分配和GC的重灾区。</strong></p>
+<p>原因：内存分配是动态的（只有处于运行期间才知道要创建哪些对象）</p>
+<h5 id="哪些内存需要回收？"><a href="#哪些内存需要回收？" class="headerlink" title="哪些内存需要回收？"></a>哪些内存需要回收？</h5><p><strong>可达性分析算法</strong></p>
+<p>从GC Roots对象开始向下搜索，在这条引用链中，当一个对象没有任何引用链相连时，证明该对象不可用，被判定为可回收。</p>
+<p><strong>什么对象可以作为</strong>GC Roots对象？</p>
+<ul>
+<li>虚拟机栈（栈帧中的本地变量表）中引用的对象。</li>
+<li>方法区中静态属性引用的对象。</li>
+<li>方法区中常量引用的对象。</li>
+<li>Native方法引用的对象。</li>
+</ul>
+<h5 id="堆中不可达对象回收与finalize方法"><a href="#堆中不可达对象回收与finalize方法" class="headerlink" title="堆中不可达对象回收与finalize方法"></a>堆中不可达对象回收与finalize方法</h5><p>当对象变成(GC Roots)不可达时，GC会判断该对象是否覆盖了finalize方法，若未覆盖，则直接将其回收。否则，若对象未执行过finalize方法（finalize只会被调用一次），将其放入F-Queue队列，由一低优先级线程执行该队列中对象的finalize方法。执行finalize方法完毕后，GC会再次判断该对象是否可达，若不可达，则进行回收，否则，对象“复活”。（在finalize方法中，可将对象再次于引用链上的对象联系上，即可避免被回收）</p>
+<h5 id="方法区或元空间中无用的类的回收"><a href="#方法区或元空间中无用的类的回收" class="headerlink" title="方法区或元空间中无用的类的回收"></a>方法区或元空间中无用的类的回收</h5><p>类回收必须判断：</p>
+<ul>
+<li>该类的所有实例都已经被回收。</li>
+<li>加载该类的classloader已经被回收。</li>
+<li>无法在任何地方通过反射访问该类的方法。</li>
+</ul>
+<h5 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h5><h6 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h6><p>分为标记 和 清除两个阶段：标记出所有需要回收的对象，统一回收所有被标记的对象。</p>
+<p>缺点：标记清除后产生大量不连续的内存碎片，导致无法找到足够大的内存块去分配大对象而提前触发下一次垃圾收集。</p>
+<h5 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h5><p>将内存一分为二，当A内存用完了，就将还存活着的对象复制到B上去，然后把A一次性回收掉。</p>
+<p>优点：高效，由于内存连续，分配内存时采用指针碰撞（移动堆顶指针）。</p>
+<p>缺点：每次只能使用内存的一半。当对象存活率很高时，复制效率就会非常低下（只有对象朝生夕死效率高）</p>
+<p>复制算法在回收新生代上使用广泛。</p>
+<h5 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h5><p>在标记-清除的基础上，对内存区域进行压缩，消除内存碎片。</p>
+<h5 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h5><p>对不同内存区域（新生代、老年代）采用不同的收集算法。 新生代对象朝生夕死，所以很适合用复制算法。老年代对象存活率很高，所以适合标记-清除或者标记-整理算法（CMS就是采用标记-清除（整理）算法的老年代垃圾收集器）。</p>
+<h5 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h5><p>一个现实的问题是：垃圾回收时需要 stop the world。但是可达性分析时，仅仅枚举GC Roots就将浪费很多时间，因为可以作为GC Roots 的对象很多：</p>
+<ul>
+<li>虚拟机栈（栈帧中的本地变量表）中引用的对象。</li>
+<li>方法区中静态属性引用的对象。</li>
+<li>方法区中常量引用的对象。</li>
+<li>Native方法引用的对象。</li>
+</ul>
+<p>所以：在完成类加载的时候，hotspot就将GC Roots对象存放到OopMap中。当垃圾收集线程触发时，各个线程定时轮询垃圾收集中断指令，如果检查到，线程就运行到最近的安全点（safepoint）处停下，以便垃圾收集线程工作（主动式中断）</p>
+<h5 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h5><p>常用的新生代收集器：Serial</p>
+<p>常用的老年代收集器：CMS</p>
+<p>新生代和老年代混合收集器：G1</p>
 
       
     </div>
@@ -388,8 +402,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/07/06/HashMap源码阅读/" rel="next" title="HashMap源码阅读">
-                <i class="fa fa-chevron-left"></i> HashMap源码阅读
+              <a href="/2019/07/14/spring之bean的生命周期/" rel="next" title="spring之bean的生命周期">
+                <i class="fa fa-chevron-left"></i> spring之bean的生命周期
               </a>
             
           </div>
@@ -397,10 +411,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/07/14/spring之bean的生命周期/" rel="prev" title="spring之bean的生命周期">
-                spring之bean的生命周期 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -532,7 +542,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#mysql事务隔离级别"><span class="nav-number">1.</span> <span class="nav-text">mysql事务隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#事务的基本特征"><span class="nav-number">1.1.</span> <span class="nav-text">事务的基本特征</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#mysql隔离级别"><span class="nav-number">1.2.</span> <span class="nav-text">mysql隔离级别</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#死锁"><span class="nav-number">1.3.</span> <span class="nav-text">死锁</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#垃圾收集的主要对象"><span class="nav-number">1.</span> <span class="nav-text">垃圾收集的主要对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#哪些内存需要回收？"><span class="nav-number">2.</span> <span class="nav-text">哪些内存需要回收？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#堆中不可达对象回收与finalize方法"><span class="nav-number">3.</span> <span class="nav-text">堆中不可达对象回收与finalize方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法区或元空间中无用的类的回收"><span class="nav-number">4.</span> <span class="nav-text">方法区或元空间中无用的类的回收</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#垃圾收集算法"><span class="nav-number">5.</span> <span class="nav-text">垃圾收集算法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#标记-清除算法"><span class="nav-number">5.1.</span> <span class="nav-text">标记-清除算法</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#复制算法"><span class="nav-number">6.</span> <span class="nav-text">复制算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标记-整理算法"><span class="nav-number">7.</span> <span class="nav-text">标记-整理算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#分代收集算法"><span class="nav-number">8.</span> <span class="nav-text">分代收集算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#算法实现"><span class="nav-number">9.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#垃圾收集器"><span class="nav-number">10.</span> <span class="nav-text">垃圾收集器</span></a></li></ol></div>
             
 
           </div>
