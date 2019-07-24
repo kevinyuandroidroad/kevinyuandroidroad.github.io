@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="哪些内存需要回收？ 什么时候回收？ 如何回收？  为什么要去了解gc和内存分配？因为虽然javaGC和内存分配都是虚拟机自动进行的，但是，  当需要排查各种内存泄漏、内存溢出问题 当垃圾收集成为系统达到更高并发量的瓶颈  的时候，我们就需要对他们实施必要的监控和调节。 垃圾收集的主要对象程序计数器、虚拟机栈、本地方法栈这三个区域是线程私有的，栈中的栈帧随着方法的进入和退出执行着如栈何处栈的操作，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-20T08:37:12.890Z">
+<meta property="og:updated_time" content="2019-07-24T15:11:15.445Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jvm之内存分配策略">
 <meta name="twitter:description" content="哪些内存需要回收？ 什么时候回收？ 如何回收？  为什么要去了解gc和内存分配？因为虽然javaGC和内存分配都是虚拟机自动进行的，但是，  当需要排查各种内存泄漏、内存溢出问题 当垃圾收集成为系统达到更高并发量的瓶颈  的时候，我们就需要对他们实施必要的监控和调节。 垃圾收集的主要对象程序计数器、虚拟机栈、本地方法栈这三个区域是线程私有的，栈中的栈帧随着方法的进入和退出执行着如栈何处栈的操作，">
@@ -375,9 +375,39 @@
 <li>Native方法引用的对象。</li>
 </ul>
 <p>所以：在完成类加载的时候，hotspot就将GC Roots对象存放到OopMap中。当垃圾收集线程触发时，各个线程定时轮询垃圾收集中断指令，如果检查到，线程就运行到最近的安全点（safepoint）处停下，以便垃圾收集线程工作（主动式中断）</p>
-<h5 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h5><p>常用的新生代收集器：Serial</p>
+<h5 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h5><p>常用的新生代收集器：Serial,ParNew(Serial的多线程版本)</p>
 <p>常用的老年代收集器：CMS</p>
 <p>新生代和老年代混合收集器：G1</p>
+<p>当使用参数 -XX:+UseConcMarkSweepGC来选择老年代收集器为CMS时，ParNew会自动成为新生代的垃圾收集器（和CMS配合使用）</p>
+<h6 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h6><p>特点：回收停顿时间最短，适合b/s系统的服务端。</p>
+<p>特征：使用标记-清除算法实现</p>
+<p>回收步骤：</p>
+<ul>
+<li>初始标记（stop the world）(找到GC Roots对象)</li>
+<li>并发标记（标记不可达对象）</li>
+<li>重新标记（stop the world）（对在并发过程中由于用户线程进行导致并发标记阶段标记对象中变动的那部分对象进行标记）</li>
+<li>并发清除</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li><p>无法处理浮动垃圾。 由于并发清除阶段用户线程还在运行，还会产生新的垃圾。CMS无法处理，只能等待下次GC。也因此它需要等到内存还没有消耗完时就要触发GC。</p>
+</li>
+<li><p>CMS采用标记-清除。 GC后会有碎片化问题。解决办法：默认开启（</p>
+<p>-XX:UseCMSCompactAtFullCollection）当因为碎片化问题无法分配大对象而导致不得不进行一次Full GC时，开启内存碎片合并整理过程。</p>
+</li>
+</ul>
+<h6 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h6><p>特点：并行并发下缩短停顿时间，分代收集，可预测的停顿，空间整合。</p>
+<p>可预测的停顿：明确指定在一个长度为m毫秒的时间片段内，消耗在垃圾收集上的时间不得超过n秒。</p>
+<p>回收原理：在G1之前的垃圾收集器的收集范围都是整个新生代或老年代，G1不再是这样。他将新生代和老年代分为多个大小相等的Region。在进行垃圾收集时，避免在整个java堆中进行垃圾收集，而是在后台维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的Region区域，这就保证了可预测的停顿。</p>
+<p>思考：尽管G1把java堆划分为许多个Region,但是，它真的就能以Region为单位进行回收吗？Region不可能是孤立的，一个对象分配在Region A上，但是他的引用有可能在Region B上。那么在做可达性分析时，还是要扫描其他Region。</p>
+<p>解答：Region上的对象引用使用 Remembered Set来避免全堆扫描的，产生引用类型的数据时，判断该引用的对象是否在该Region中，如果在，记录到Remembered Set中，在垃圾回收时，剔除Remembered Set中的枚举点即可。</p>
+<p>步骤：</p>
+<ul>
+<li>初始标记</li>
+<li>并发标记</li>
+<li>最终标记</li>
+<li>筛选回收</li>
+</ul>
 
       
     </div>
@@ -542,7 +572,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#垃圾收集的主要对象"><span class="nav-number">1.</span> <span class="nav-text">垃圾收集的主要对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#哪些内存需要回收？"><span class="nav-number">2.</span> <span class="nav-text">哪些内存需要回收？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#堆中不可达对象回收与finalize方法"><span class="nav-number">3.</span> <span class="nav-text">堆中不可达对象回收与finalize方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法区或元空间中无用的类的回收"><span class="nav-number">4.</span> <span class="nav-text">方法区或元空间中无用的类的回收</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#垃圾收集算法"><span class="nav-number">5.</span> <span class="nav-text">垃圾收集算法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#标记-清除算法"><span class="nav-number">5.1.</span> <span class="nav-text">标记-清除算法</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#复制算法"><span class="nav-number">6.</span> <span class="nav-text">复制算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标记-整理算法"><span class="nav-number">7.</span> <span class="nav-text">标记-整理算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#分代收集算法"><span class="nav-number">8.</span> <span class="nav-text">分代收集算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#算法实现"><span class="nav-number">9.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#垃圾收集器"><span class="nav-number">10.</span> <span class="nav-text">垃圾收集器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#垃圾收集的主要对象"><span class="nav-number">1.</span> <span class="nav-text">垃圾收集的主要对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#哪些内存需要回收？"><span class="nav-number">2.</span> <span class="nav-text">哪些内存需要回收？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#堆中不可达对象回收与finalize方法"><span class="nav-number">3.</span> <span class="nav-text">堆中不可达对象回收与finalize方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法区或元空间中无用的类的回收"><span class="nav-number">4.</span> <span class="nav-text">方法区或元空间中无用的类的回收</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#垃圾收集算法"><span class="nav-number">5.</span> <span class="nav-text">垃圾收集算法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#标记-清除算法"><span class="nav-number">5.1.</span> <span class="nav-text">标记-清除算法</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#复制算法"><span class="nav-number">6.</span> <span class="nav-text">复制算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#标记-整理算法"><span class="nav-number">7.</span> <span class="nav-text">标记-整理算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#分代收集算法"><span class="nav-number">8.</span> <span class="nav-text">分代收集算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#算法实现"><span class="nav-number">9.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#垃圾收集器"><span class="nav-number">10.</span> <span class="nav-text">垃圾收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#CMS收集器"><span class="nav-number">10.1.</span> <span class="nav-text">CMS收集器</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#G1收集器"><span class="nav-number">10.2.</span> <span class="nav-text">G1收集器</span></a></li></ol></li></ol></div>
             
 
           </div>
